@@ -107,7 +107,7 @@ void juggle() {
 
 void meteor() {
     static uint8_t pos = 0;
-    const uint8_t size = 3;
+    const uint8_t size = 2;
 
     if (pos > NUM_LEDS * 2) {
         pos = 0;
