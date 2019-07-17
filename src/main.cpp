@@ -18,10 +18,8 @@
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
-#include <colorpalettes.h>
 #include "Arduino.h"
 #include "FastLED.h"
-#include "PatternState.h"
 
 CRGB leds[NUM_LEDS];
 

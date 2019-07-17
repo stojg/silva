@@ -9,13 +9,8 @@ How to install the PlatformIO tools are described in their documentation [here](
 
 `brew install platformio`
 
-After that is done, ensure that you have installed the libraries that this project demands, like FASTLed etc:
-
-`make install`
-
-Now you can try to compile the source code with 
+To ensure everything is working you should try to compile the source code with 
 
 `make` 
 
-to ensure everything is working. If this is the first time running platformio it will also download required tools to 
-work with arduino boards etc. 
+If this is the first time running platformio it will also download required tools and libraries defined in the platform.ini file. 
