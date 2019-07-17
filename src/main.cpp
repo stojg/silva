@@ -11,6 +11,7 @@
 #define LED_PIN     3
 #define COLOR_ORDER GRB
 #define CHIPSET     WS2812B
+
 //#define NUM_LEDS 23
 #define NUM_LEDS 55
 
@@ -23,27 +24,32 @@
 
 CRGB leds[NUM_LEDS];
 
+// the max brightness is set as a global variable so it can be changed by pots or other events
 uint8_t max_bright = 64;
 
 // Index number of which pattern is current
 uint8_t gCurrentPatternNumber = 0;
+
 // rotating "base color" used by many of the patterns
 uint8_t gHue = 0;
 
 void setup() {
-    delay(3000); // 3 second delay for recovery
+    // 1 second delay for recovery in case there is something crashing the board and we need to reflash it
+    delay(1000);
 
     // tell FastLED about the LED strip configuration
     FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
-    //FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
 
     // set master brightness control
     FastLED.setBrightness(max_bright);
 
+    // be careful about how much amperage we use
     set_max_power_in_volts_and_milliamps(5, 100);
+
+    // this pin will be set high when the FASTLED is limiting 'power'
     set_max_power_indicator_LED(LED_BUILTIN);
 
-    // Awesome randomizer
+    // seed the different randoms
     random16_set_seed(4832);
     random16_add_entropy(analogRead(2));
 }
@@ -103,12 +109,12 @@ void meteor() {
     static uint8_t pos = 0;
     const uint8_t size = 3;
 
-    if (pos > NUM_LEDS*2) {
+    if (pos > NUM_LEDS * 2) {
         pos = 0;
     }
 
-    for(auto & led : leds) {
-        if((random8(10)>5) ) {
+    for (auto &led : leds) {
+        if ((random8(10) > 5)) {
             led.fadeToBlackBy(96);
         }
     }
@@ -125,10 +131,10 @@ typedef void (*SimplePatternList[])();
 
 SimplePatternList gPatterns = {meteor, sinelon, juggle, bpm};
 
+// Change pattern
 void nextPattern() {
     // add one to the current pattern number, and wrap around at the end
-
-    for (uint8_t i = 0; i < FRAMES_PER_SECOND/4; i++) {
+    for (uint8_t i = 0; i < FRAMES_PER_SECOND / 4; i++) {
         fadeToBlackBy(leds, NUM_LEDS, 32);
         FastLED.show();
         FastLED.delay(1000 / FRAMES_PER_SECOND);
